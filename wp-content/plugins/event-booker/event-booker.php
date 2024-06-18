@@ -20,9 +20,9 @@ if( !defined('EVENT_BOOKER_DIR') ){
 }
 class Event_Booker {
     function __construct(){
+		// add admin panel Event CPT
+        require_once('includes/event-custom-post-type.php');
 		
-		if(is_admin()){
-		}
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_event_booker_scripts'));
 	}
 
@@ -33,8 +33,11 @@ class Event_Booker {
 		$plugin_dir_url = plugin_dir_url( __FILE__ );
 
         // full-calendar js lib
-		wp_enqueue_script('full-calendar',  plugin_dir_url( __FILE__ ) . 'js/fullcalendar-6.1.14/index.global.min.js', false, $plugin_version, true );
-	}
+		wp_enqueue_script('full-calendar',  plugin_dir_url( __FILE__ ) . 'js/fullcalendar-6.1.14/dist/index.global.min.js', false, $plugin_version, true );
+        // app.js
+        wp_enqueue_script('app',  plugin_dir_url( __FILE__ ) . 'js/app.js', false, $plugin_version, true );
+
+    }
 
 }
 
