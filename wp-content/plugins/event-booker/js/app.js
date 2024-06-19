@@ -1,5 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    const calendarEvents = variables.allevents;
+    const availableEvents = calendarEvents.map((calendarEvent)=>{
+      return {
+        title: calendarEvent?.title,
+        start: calendarEvent?.start_date,
+        end: calendarEvent?.end_date,
+      }
+    })
+
     var calendarEl = document.getElementById('calendar');
+    var modal = jQuery('#modalWindow');
+    var modalContent = jQuery('#modalWindowContent');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
@@ -12,68 +24,45 @@ document.addEventListener('DOMContentLoaded', function() {
       selectable: true,
       selectMirror: true,
       select: function(arg) {
-        var title = prompt('Event Title:');
-        if (title) {
-          calendar.addEvent({
-            title: title,
-            start: arg.start,
-            end: arg.end,
-            allDay: arg.allDay
-          })
-        }
+        
+        
         calendar.unselect()
       },
       eventClick: function(arg) {
-        if (confirm('Are you sure you want to delete this event?')) {
-          arg.event.remove()
+        const title = arg?.event?.title;
+        if(title){
+          getEventData(title);
         }
       },
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      events: [
-        {
-          title: 'All Day Event',
-          start: '2024-06-19'
-        },
-        {
-          title: 'Long Event',
-          start: '2024-06-20'
-        },
-
-        {
-          title: 'Conference',
-          start: '2024-06-21'
-        },
-        {
-          title: 'Meeting',
-          start: '2024-06-22'
-        },
-        {
-          title: 'Lunch',
-          start: '2024-06-23'
-        },
-        {
-          title: 'Meeting',
-          start: '2024-06-24'
-        },
-        {
-          title: 'Happy Hour',
-          start: '2024-06-25'
-        },
-        {
-          title: 'Dinner',
-          start: '2024-06-26'
-        },
-        {
-          title: 'Birthday Party',
-          start: '2024-06-27'
-        },
-        {
-          title: 'Click for Google',
-          start: '2024-06-28'
-        }
-      ]
+      events: availableEvents,
     });
 
     calendar.render();
+
+
+    const getEventData = (title) => {
+      const data = {
+        action: "get_event_data_action",
+        title: title,
+      };
+      jQuery.ajax({
+        url: variables.ajaxurl,
+        type: "POST",
+        data: data,
+        success: function (response) {
+          renderModalWindow(response);
+        },
+      });
+    }
+
+    const renderModalWindow = (response)=>{
+      modalContent.html(response);
+      modal.show();
+      // console.log(response)
+    }
+    jQuery('#modalWindow .close').on('click', function() {
+      modal.hide();
+  });
   });

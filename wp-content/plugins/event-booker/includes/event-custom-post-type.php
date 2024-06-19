@@ -46,7 +46,7 @@ if( !class_exists('YVG_Event') ){
 				'capability_type' 	=> 'post',
 				'has_archive' 		=> false,
 				'hierarchical' 		=> false,
-				'supports' 			=> array( 'title', 'editor' ),
+				'supports' 			=> array( 'title', 'editor', 'thumbnail' ),
 				'menu_position' 	=> 5,
 			);
 			register_post_type( $this->post_type, $args );

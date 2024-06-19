@@ -17,7 +17,14 @@ Template Name: Book Events
 
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
+	
     <div id='calendar'></div>
+	<div id="modalWindow" class="yvg-modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<div id="modalWindowContent"></div>
+		</div>
+	</div>
     <?php wp_footer(); ?>
 </body>
 
