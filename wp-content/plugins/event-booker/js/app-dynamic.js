@@ -1,5 +1,6 @@
 // Lead Booker Form
 const leadBookerForm = document.querySelector("#lead_booker_form");
+var modal = jQuery('#modalWindow');
 
 jQuery( "#lead_form_submit" ).on( "click", function(event) {
     event.preventDefault();
@@ -16,7 +17,8 @@ const  submitLead = async () => {
         body: formData,
         });
         const response = await responseJSON.json()
-        alert('Submitted. Thank you!')
+        modal.hide();
+        alert(response)
     } catch (e) {
         console.error(e);
     }

@@ -30,6 +30,9 @@ class Event_Booker {
 
 		// add admin panel Event CPT
         require_once('includes/event-custom-post-type.php');
+
+        // add admin panel Lead CPT
+        require_once('includes/lead-custom-post-type.php');
 		
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_event_booker_scripts'));
 	}
@@ -49,7 +52,7 @@ class Event_Booker {
             $phone = sanitize_text_field( wp_unslash( $_POST['phone'] ) );
             $email = sanitize_text_field( wp_unslash( $_POST['email'] ) );
             if($name && $phone &&  $email){
-                echo $name . ' ' . $phone . ' ' .  $email;
+                $this->create_a_lead($name, $phone, $email);
             }
         }
     }
@@ -131,6 +134,30 @@ class Event_Booker {
             // reset WP_Query
             wp_reset_postdata();
         }
+    }
+
+    function create_a_lead($name, $phone, $email){
+        $post_data = array(
+            'post_title'    => $name,
+            'post_type'     => 'yvg_lead', // type of CPT
+            'post_status'   => 'publish',
+        );
+
+        // create post
+        $post_id = wp_insert_post($post_data);
+
+        $id_phone =  'yvg_lead_phone';
+        $id_email =  'yvg_lead_email';
+
+        $response = 'Submitted. Thank you!';
+        if ($post_id) {
+            update_post_meta($post_id, 'event-booker_'.$id_phone, $phone);
+            update_post_meta($post_id, 'event-booker_'.$id_email, $email);           
+        } else {
+            $response = 'Error. Sorry:(';
+        }
+
+        wp_send_json($response);
     }
 }
 
