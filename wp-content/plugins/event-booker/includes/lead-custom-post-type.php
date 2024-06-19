@@ -16,6 +16,11 @@ if( !class_exists('Yvg_Lead') ){
             if( is_admin() ){
                 add_action('add_meta_boxes',  array($this, 'add_yvg_lead_meta'));
                 add_action('save_post',  array($this, 'save_yvg_lead_meta'));
+
+				 // CustomColumns
+				 add_filter('manage_' . $this->post_type . '_posts_columns', array($this, 'add_lead_custom_columns'));
+				 add_action('manage_' . $this->post_type . '_posts_custom_column', array($this, 'render_lead_custom_columns'), 10, 2);
+			
             }
 		}
 		
@@ -111,6 +116,28 @@ if( !class_exists('Yvg_Lead') ){
                 if( strpos($key, 'event-booker_') !== false  ){
                     update_post_meta($post_id, $key, $value);
                 }
+            }
+        }
+
+		 // Add Custom Columns
+		 function add_lead_custom_columns($columns){
+            $columns['lead_name'] = 'Lead Name';
+            $columns['lead_phone'] = 'Lead Phone';
+            return $columns;
+        }
+
+        // Render CustomColumns data (name and phone of leads)
+        function render_lead_custom_columns($column, $post_id){
+            switch ($column) {
+                case 'lead_name':
+                    echo get_the_title($post_id);
+                    break;
+                case 'lead_phone':
+					$id_phone =  'yvg_lead_phone';
+                    echo get_post_meta($post_id, 'event-booker_' . $id_phone, true);
+                    break;
+                default:
+                    break;
             }
         }
 
