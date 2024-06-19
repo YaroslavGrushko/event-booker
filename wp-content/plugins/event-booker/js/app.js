@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var modal = jQuery('#modalWindow');
     var modalContent = jQuery('#modalWindowContent');
 
+    // Calendar
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
         left: 'prev,next today',
@@ -57,12 +58,47 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    // Modal Window:
     const renderModalWindow = (response)=>{
       modalContent.html(response);
       modal.show();
-      // console.log(response)
+      const dynamicJsUrl = variables.plugindir + '/js/app-dynamic.js';
+      loadScript(dynamicJsUrl)
+        .then( data  => {
+            console.log("Script loaded successfully", data);
+        })
+        .catch( err => {
+            console.error(err);
+        });
     }
     jQuery('#modalWindow .close').on('click', function() {
       modal.hide();
-  });
-  });
+    });
+
+    // dynamically load js 
+    const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
+      return new Promise((resolve, reject) => {
+          try {
+              const scriptEle = document.createElement("script");
+              scriptEle.type = type;
+              scriptEle.async = async;
+              scriptEle.src =FILE_URL;
+  
+              scriptEle.addEventListener("load", (ev) => {
+                  resolve({ status: true });
+              });
+  
+              scriptEle.addEventListener("error", (ev) => {
+                  reject({
+                      status: false,
+                      message: `Failed to load the script ${FILE_URL}`
+                  });
+              });
+  
+              document.body.appendChild(scriptEle);
+          } catch (error) {
+              reject(error);
+          }
+      });
+  };
+});

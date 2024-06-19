@@ -22,9 +22,9 @@
             <?php the_post_thumbnail(); ?>
         </div>
     <?php } ?>
-    <div class="contact-form-container">
+    <div class="container-lead-form">
         <h2>Contact Form</h2>
-        <form action="your-server-side-script.php" method="post">
+        <form id="lead_booker_form" method="post" enctype="multipart/form-data">
             <div class="contact-form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -37,9 +37,7 @@
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            <div class="contact-formform-group">
-                <input type="submit" value="Submit">
-            </div>
+            <?php submit_button( __( 'Book', 'eventbookertheme' ), 'primary', 'lead_form_submit' );?>
         </form>
     </div>
 </div>

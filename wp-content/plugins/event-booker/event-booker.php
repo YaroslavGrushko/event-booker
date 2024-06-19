@@ -20,10 +20,13 @@ if( !defined('EVENT_BOOKER_DIR') ){
 }
 class Event_Booker {
     function __construct(){
-        // AJAX request from front-end:
+        // AJAX request from front-end (Event):
         add_action("wp_ajax_get_event_data_action" , array($this, "get_event_data_action") );
         add_action("wp_ajax_nopriv_get_event_data_action" , array($this, "get_event_data_action") );
 
+        // AJAX request from front-end (Lead):
+        add_action("wp_ajax_submit_lead_data_action" , array($this, "submit_lead_data_action") );
+        add_action("wp_ajax_nopriv_submit_lead_data_action" , array($this, "submit_lead_data_action") );
 
 		// add admin panel Event CPT
         require_once('includes/event-custom-post-type.php');
@@ -36,6 +39,17 @@ class Event_Booker {
             $title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
             if($title){
                 $this->get_event_by_title($title);
+            }
+        }
+    }
+
+    function submit_lead_data_action(){
+        if($_POST['name'] && $_POST['phone'] && $_POST['email']){
+            $name = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+            $phone = sanitize_text_field( wp_unslash( $_POST['phone'] ) );
+            $email = sanitize_text_field( wp_unslash( $_POST['email'] ) );
+            if($name && $phone &&  $email){
+                echo $name . ' ' . $phone . ' ' .  $email;
             }
         }
     }
@@ -54,7 +68,8 @@ class Event_Booker {
 
         $variables = array(
             'allevents' => $all_events_data,
-            'ajaxurl' => admin_url( 'admin-ajax.php' )
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'plugindir' => $plugin_dir_url
         );
         wp_localize_script('app-js', "variables", $variables);
     }
