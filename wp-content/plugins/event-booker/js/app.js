@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
       modalContent.html(response);
       modal.show();
       const dynamicJsUrl = variables.plugindir + '/js/app-dynamic.js';
-      loadScript(dynamicJsUrl)
+        loadScript(dynamicJsUrl)
         .then( data  => {
             console.log("Script loaded successfully", data);
         })
@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
       return new Promise((resolve, reject) => {
           try {
+
+              tryToRemoveScript(FILE_URL);
+
               const scriptEle = document.createElement("script");
               scriptEle.type = type;
               scriptEle.async = async;
@@ -101,4 +104,12 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       });
   };
+
+  const tryToRemoveScript = (FILE_URL) => {
+    var scriptTag = document.querySelector(`script[src="${FILE_URL}"]`);
+
+    if (scriptTag) {
+        scriptTag.parentNode.removeChild(scriptTag);
+    }
+  }
 });

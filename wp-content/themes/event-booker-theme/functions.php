@@ -11,4 +11,6 @@ function event_booker_get_theme_version(){
  }
 
  add_action( 'wp_enqueue_scripts', 'event_booker_scripts' );
+
+ add_theme_support( 'post-thumbnails' );
 ?>

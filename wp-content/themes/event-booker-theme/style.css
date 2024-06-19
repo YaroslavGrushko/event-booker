@@ -71,3 +71,8 @@ body {
 .yvg-modal .contact-form-group{
     margin-top: 20px;
 }
+
+.yvg-modal .event-thumbnail img{
+  max-width: 100%;
+  height: auto;
+}
